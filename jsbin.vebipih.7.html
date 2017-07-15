@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<!--
+Created using JS Bin
+http://jsbin.com
+
+Copyright (c) 2017 by AnikoBorosova (http://jsbin.com/vebipih/7/edit)
+
+Released under the MIT license: http://jsbin.mit-license.org
+-->
+<meta name="robots" content="noindex">
+<html>
+
+<head>
+  <meta name="description" content="Language setting window for Wikipedia">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.css">
+  <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+  <title>JS Bin</title>
+<style id="jsbin-css">
+/* == Language setting cog == */
+
+.language-settings {
+  position: absolute;
+  float: left;
+  top: 50px;
+  left: 30px;
+}
+
+.fa-cog {
+  color: #666;
+}
+
+.fa-cog:hover {
+  color: #4d4d4d;
+}
+
+/* === Language setting pop-up window === */
+
+.language-container {
+  position: absolute;
+  /*top: 300px;
+  left: 180px;*/
+  display: none;
+  z-index: 1000;
+  width: 650px;
+  height: 350px;
+  border: 1px solid #ccc;
+  box-shadow: 0 5px 10px #ccc;
+}
+
+.language-container::after {
+  content: " ";
+  position: absolute;
+  top: 10%;
+  right: 100%;
+  margin-top: -15px;
+  border-width: 15px;
+  border-style: solid;
+  border-color: transparent #ccc transparent transparent;
+}
+
+.first-row {
+  position: absolute;
+  height: 80%;
+  width: 100%;
+  top: 0;
+}
+
+.second-row {
+  position: absolute;
+  top: 80%;
+  height: 20%;
+  width: 100%;
+  background-color: #fafafa;
+}
+
+.apply {
+  position: absolute;
+  top: 40%;
+  right: 10%;
+}
+
+.apply a {
+  color: #000;
+  text-decoration: none;
+  padding: 8.75px 16px;
+  border: 1px solid #a2a9b1;
+  margin-left: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: sans-serif;
+  background-color: #f8f9fa;
+  cursor: pointer;
+}
+
+.apply a:last-child {
+  background-color: #3366cc;
+  border-color: #3366cc;
+  color: #fff;
+}
+
+.apply a:first-child:hover {
+  color: #333;
+  background-color: #fff;
+  transition: color .3s ease-in-out;
+}
+
+.apply a:last-child:hover {
+  background-color: #3385ff;
+  transition: color .3s ease-in-out;
+}
+
+/* First row style */
+
+.first-column {
+  background-color: #fafafa;
+  display: inline-block;
+  width: 40%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.second-column-Display-Language,
+.second-column-Display-Fonts,
+.second-column-Input {
+  background-color: #fff;
+  display: inline-block;
+  width: 60%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+/* == First column style == */
+
+.setting-title {
+  position: absolute;
+  top: 0;
+  height: 40%;
+}
+
+.setting-title h1 {
+  position: absolute;
+  bottom: 5px;
+  font-size: 16px;
+  line-height: 26px;
+  font-family: sans-serif;
+  color: #555;
+  padding: 15px 0 3px 15px;
+  margin-bottom: 12.8px;
+}
+
+.display {
+  position: absolute;
+  top: 40%;
+  width: 100%;
+  height: 30%;
+  padding: 5px 0 5px 40px;
+  border-left: 3px;
+  cursor: pointer;
+}
+
+.input-field {
+  position: absolute;
+  top: 70%;
+  width: 100%;
+  height: 30%;
+  padding: 5px 0 5px 40px;
+  border-left: 3px;
+  cursor: pointer;
+}
+
+.display, .input-field {
+  font-size: 17px;
+}
+
+.display span, .input-field span {
+  font-size: 12px;
+}
+
+.display:active, .input-field:active {
+  background-color: #f0f0f0;
+  border-left-color: #36b;
+}
+
+/* == Second column - Display - Language style == */
+
+.second-column-Display-Language {
+  position: absolute;
+  z-index: 5;
+}
+
+.upper-row {
+  position: absolute;
+  height: 25%;
+  width: 100%;
+  top: 0;
+}
+
+.fa-times {
+  position: absolute;
+  float: right;
+  top: 8px;
+  right: 8px;
+}
+
+.button-row {
+  position: absolute;
+  text-align: center;
+  height: 25%;
+  width: 100%;
+  top: 25%;
+}
+
+.button-row a {
+  text-decoration: none;
+  color: #000;
+  padding: 8.75px 16px;
+  border: 1px solid #a2a9b1;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: sans-serif;
+  background-color: #f8f9fa;
+  cursor: pointer;
+}
+
+.button-row a:hover {
+  color: #333;
+  background-color: #fff;
+  transition: color .3s ease-in-out;
+}
+
+.button-row a:active {
+  background-color: #d8d8d8;
+  color: #333;
+}
+
+.buttons::before,
+.buttons::after {
+  content: "";
+  display: inline-block;
+  vertical-align: middle;
+  height: 1px;
+  width: 75px;
+  background-color: #a2a9b1;
+}
+
+
+.info-language {
+  position: absolute;
+  height: 50%;
+  width: 100%;
+  bottom: 0;
+  left: 20px;
+  font-family: sans-serif;
+  font-size: 16px;
+  padding-top: 25px;
+}
+
+.info-language p {
+  margin: 6.4px 0 8px 0;
+}
+
+.small {
+  font-size: 13.3px;
+}
+
+/* == Second column - Display - Fonts style == */
+
+.second-column-Display-Fonts {
+  position: absolute;
+  z-index: 4;
+}
+
+.upper-row {
+  position: absolute;
+  height: 25%;
+  width: 100%;
+  top: 0;
+}
+
+.fa-times {
+  position: absolute;
+  float: right;
+  top: 8px;
+  right: 8px;
+}
+
+.button-row {
+  position: absolute;
+  text-align: center;
+  height: 25%;
+  width: 100%;
+  top: 25%;
+}
+
+.button-row a {
+  text-decoration: none;
+  color: #000;
+  padding: 8.75px 16px;
+  border: 1px solid #a2a9b1;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: sans-serif;
+  background-color: #f8f9fa;
+  cursor: pointer;
+}
+
+.button-row a:hover {
+  color: #333;
+  background-color: #fff;
+  transition: color .3s ease-in-out;
+}
+
+.button-row a:active {
+  background-color: #d8d8d8;
+  color: #333;
+}
+
+.buttons::before,
+.buttons::after {
+  content: "";
+  display: inline-block;
+  vertical-align: middle;
+  height: 1px;
+  width: 75px;
+  background-color: #a2a9b1;
+}
+
+.info-fonts {
+  position: absolute;
+  height: 50%;
+  width: 100%;
+  bottom: 0;
+  font-family: sans-serif;
+  padding: 0 15px;
+}
+
+.info-fonts h4 {
+  font-size: 16px;
+  font-weight: bold;
+  padding: 8px 0 2.7px 0;
+}
+
+.input-box {
+  position: absolute;
+  width: 80%;
+  padding: 10px 0;
+}
+
+.info-fonts input {
+  position: absolute;
+  display: inline-block;
+  vertical-align: middle;
+  left: 0;
+  width: 15%;
+}
+
+.info-fonts p {
+  position: absolute;
+  display: inline-block;
+  vertical-align: middle;
+  right: 0;
+  width: 85%;
+  font-size: 13px;
+  padding-left: 10px;
+}
+
+/* == Second column - Input style == */
+
+.second-column-Input {
+  position: absolute;
+  z-index: 3;
+}
+
+.upper-row {
+  position: absolute;
+  height: 25%;
+  width: 100%;
+  top: 0;
+}
+
+.fa-times {
+  position: absolute;
+  float: right;
+  top: 8px;
+  right: 8px;
+}
+
+.input-info {
+  position: absolute;
+  height: 75%;
+  width: 100%;
+  top: 25%;
+  font-family: sans-serif;
+  padding: 0 15px;
+}
+
+.second-column-Input h3 {
+  font-size: 21px;
+  line-height: 26px;
+  padding: 3.6x 0 3.6px 0;
+  margin: 1.3px 0 10px 0;
+}
+
+.second-column-Input p {
+  font-size: 14.6px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.second-column-Input a {
+  text-decoration: none;
+  display: inline-block;
+  padding: 8.75px 16px;
+  border: 1px solid #3366cc;
+  margin: 5px 0;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: sans-serif;
+  background-color: #3366cc;
+  color: #fff;
+  cursor: pointer;
+}
+
+.second-column-Input a:hover {
+  background-color: #3385ff;
+  transition: color .3s ease-in-out;
+}
+</style>
+</head>
+
+<body>
+  <span class="language-settings"><a href="#" title="Language settings"><i class="fa fa-cog fa-lg" aria-hidden="true"></i></a></span>
+  <!-- Language setting pop-up window -->
+
+  <div class="language-container">
+
+    <div class="first-row">
+      <div class="first-column">
+        <div class="setting-title">
+          <h1>Language settings</h1>
+        </div>
+        <div class="display">
+          <div>Display</div>
+          <span>Set language used for menus and fonts</span>
+        </div>
+        <div class="input-field">
+          <div>Input</div>
+          <span>Writing in a different language?</span>
+        </div>
+      </div>
+
+      <div class="second-column-Display-Language">        <!--If Display / Language is active -->
+
+        <div class="upper-row">
+          <i class="fa fa-times" aria-hidden="true"></i>
+        </div>
+
+        <div class="button-row">
+          <div class="buttons">
+            <a class="Language">Language</a><!--
+            --><a class="Fonts">Fonts</a>
+          </div>
+        </div>
+
+        <div class="info-language">
+          <p><b>Display language:</b> English (same as content)</p>
+          <p class="small"><a href="#" title="Login">Log in</a> to select a different language for menus.</p>
+        </div>
+
+      </div>
+
+      <div class="second-column-Display-Fonts">           <!-- If Display / Fonts is active -->
+
+        <div class="upper-row">
+          <i class="fa fa-times" aria-hidden="true"></i>
+        </div>
+
+        <div class="button-row">
+          <div class="buttons">
+            <a class="Language">Language</a><!--
+            --><a class="Fonts">Fonts</a>
+          </div>
+        </div>
+
+        <div class="info-fonts">
+          <h4>Font settings</h4>
+          <div class="input-box">
+            <input type="checkbox">
+            <p>Download fonts when needed Download missing fonts automatically and allow selection of preferred fonts.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="second-column-Input">                    <!--  If input is active -->
+
+        <div class="upper-row">
+          <i class="fa fa-times" aria-hidden="true"></i>
+        </div>
+        <div class="input-info">
+          <h3>Input settings</h3>
+          <p>Input tools are disabled.</p>
+          <a>Enable input tools</a>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="second-row">
+      <div class="apply">
+        <a class="btn">Cancel</a>
+        <a class="btn">Apply settings</a>
+      </div>
+    </div>
+  </div>
+<script id="jsbin-javascript">
+$(document).ready(function() {
+
+  //method to hide and show 
+  //the language setting window
+  $('.fa-cog').click(function() {
+    var top = $('.fa-cog').position().top + 20;
+    var left = $('.fa-cog').position().left + 60;
+    $('.language-container').css({top: top + "px", left: left + "px"});
+    $('.language-container').toggle();
+  });
+
+  //method to show the Display/Language info
+  //while hiding all the others
+  $('.display').click(function() {
+    $('.second-column-Display-Language').show();
+    $('.second-column-Display-Fonts').hide();
+    $('.second-column-Input').hide();
+  });
+
+  $('.Language').click(function() {
+    $('.second-column-Display-Language').show();
+    $('.second-column-Display-Fonts').hide();
+    $('.second-column-Input').hide();
+  });
+  //method to show the Display/Fonts info
+  //while hiding all the others
+  $('.Fonts').click(function() {
+    $('.second-column-Display-Fonts').show();
+    $('.second-column-Display-Language').hide();
+    $('.second-column-Input').hide();
+  });
+
+  //method to show the Input info
+  //while hiding all the others
+  $('.input-field').click(function() {
+    $('.second-column-Input').show();
+    $('.second-column-Display-Language').hide();
+    $('.second-column-Display-Fonts').hide();
+
+  });
+
+  //method to close the Language setting window
+  //when clicking the X or the buttons within the window
+  $('.fa-times, .btn').click(function() {
+    $('.language-container').hide();
+  });
+});
+</script>
+</body>
+
+</html>
