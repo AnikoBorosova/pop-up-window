@@ -1,4 +1,4 @@
-# Pop-up-window
+# Pop-up window
 Pop-up window from Wikipedia popping up after triggering setting cog. Clickable menu within the window. 
 # Built with
 - HTML5 
